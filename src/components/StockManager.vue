@@ -39,7 +39,7 @@ const lowStockItems = computed(() => items.value.filter(item => item.stock < 10)
 
 const filteredStockOutItems = computed(() => {
   if (!stockOutSearch.value) return items.value;
-  const searchLower = stockOutSearch.value.toLowerCase();
+  const searchLower = String(stockOutSearch.value).toLowerCase();
   return items.value.filter(item => 
     String(item.name).toLowerCase().includes(searchLower)
   );
@@ -90,15 +90,16 @@ const handleStockIn = async () => {
 };
 
 const selectStockOutItem = (item: Item) => {
-  stockOutForm.value.itemName = item.name;
-  stockOutSearch.value = item.name;
+  const name = String(item.name);
+  stockOutForm.value.itemName = name;
+  stockOutSearch.value = name;
   showStockOutDropdown.value = false;
 };
 
 const handleStockOut = async () => {
   // Validate that the searched item actually exists
   const existingItem = items.value.find(
-    i => i.name.toLowerCase() === stockOutForm.value.itemName.toLowerCase()
+    i => String(i.name).toLowerCase() === String(stockOutForm.value.itemName).toLowerCase()
   );
 
   if (!stockOutForm.value.itemName || !existingItem) {
